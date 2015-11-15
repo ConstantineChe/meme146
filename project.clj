@@ -31,7 +31,8 @@
                  [secretary "1.2.3"]
                  [org.clojure/core.async "0.2.371"]
                  [cljs-ajax "0.5.1"]
-                 [org.immutant/web "2.1.0" :exclusions [ch.qos.logback/logback-classic]]]
+                 [org.immutant/web "2.1.0" :exclusions [ch.qos.logback/logback-classic]]
+                 [clojure-csv/clojure-csv "2.0.1"]]
 
   :min-lein-version "2.0.0"
   :uberjar-name "meme146.jar"
@@ -52,7 +53,7 @@
       :output-dir "target/cljsbuild/public/js/out"
       :externs ["react/externs/react.js"]
       :pretty-print true}}}}
-  
+
   :profiles
   {:uberjar {:omit-source true
              :env {:production true}
@@ -61,8 +62,8 @@
               {:builds
                {:app
                 {:source-paths ["env/prod/cljs"]
-                 :compiler {:optimizations :advanced :pretty-print false}}}} 
-             
+                 :compiler {:optimizations :advanced :pretty-print false}}}}
+
              :aot :all}
    :dev           [:project/dev :profiles/dev]
    :test          [:project/test :profiles/test]
@@ -75,8 +76,8 @@
                    :cljsbuild
                    {:builds
                     {:app
-                     {:source-paths ["env/dev/cljs"] :compiler {:source-map true}}}} 
-                  
+                     {:source-paths ["env/dev/cljs"] :compiler {:source-map true}}}}
+
                   :figwheel
                   {:http-server-root "public"
                    :server-port 3449
@@ -84,7 +85,7 @@
                    :nrepl-middleware ["cemerick.piggieback/wrap-cljs-repl"]
                    :css-dirs ["resources/public/css"]
                    :ring-handler meme146.handler/app}
-                  
+
                   :repl-options {:init-ns meme146.core}
                   :injections [(require 'pjstadig.humane-test-output)
                                (pjstadig.humane-test-output/activate!)]

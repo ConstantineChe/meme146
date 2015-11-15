@@ -2,10 +2,13 @@
     (:require [monger.core :as mg]
               [monger.collection :as mc]
               [monger.operators :refer :all]
-              [environ.core :refer [env]]))
+              [environ.core :refer [env]])
+    (:import org.bson.types.ObjectId))
 
 
 (defonce db (atom nil))
+
+(defn oid [] (ObjectId.))
 
 (defn connect! []
   ;; Tries to get the Mongo URI from the environment variable
@@ -16,10 +19,10 @@
     (mg/disconnect conn)
     (reset! db nil)))
 
-(defn create-user [user]
-  (mc/insert @db "users" user))
+(defn create-user! [user]
+  (mc/insert @db "users" (merge user {:_id (oid)})))
 
-(defn update-user [id first-name last-name email]
+(defn update-user! [id first-name last-name email]
   (mc/update @db "users" {:_id id}
              {$set {:first_name first-name
                     :last_name last-name
@@ -27,3 +30,21 @@
 
 (defn get-user [id]
   (mc/find-one-as-map @db "users" {:_id id}))
+
+
+(defn add-translation!
+  ([base translation]
+   (mc/insert @db "dictionary"
+              {:_id (oid)
+               :base base
+               :translation translation
+               :tag "default"}))
+  ([base translation tag]
+   (mc/insert @db "dictionary"
+              {:_id (oid)
+               :base base
+               :translation translation
+               :tag tag})))
+
+(defn add-dictionary! [collection]
+  (mc/insert-batch @db "dictionary" collection))
