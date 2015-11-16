@@ -2,6 +2,7 @@
   (:require [meme146.layout :as layout]
             [compojure.core :refer [defroutes GET POST]]
             [ring.util.http-response :refer [ok]]
+            [ring.util.response :refer [redirect]]
             [clojure.java.io :as io]
             [meme146.db.core :as db]
             [bouncer.core :as b]
@@ -17,6 +18,18 @@
   (layout/render
    "dictionary.html"
    {:dictionary (db/get-dictionary)}))
+
+(defn validate-dic-entry [params]
+  (first
+   (b/validate
+    params
+    :base v/required
+    :translation v/required)))
+
+(defn upload! [{:keys [params]}]
+  (do
+    (apply db/add-translation (vals (dissoc params :__anti-forgery-token)))
+    (redirect "/dictionary")))
 
 (defroutes home-routes
   (GET "/" [] (home-page))

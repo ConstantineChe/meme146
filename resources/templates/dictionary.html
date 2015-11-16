@@ -1,2 +1,30 @@
-{% extends "base.html %}
+{% extends "base.html" %}
 {% block content %}
+<h>Dictionary page</h>
+<p>You can load csv</p>
+<p>load</p>
+<p>Or add an entry</p>
+<form method="POST" id="add-enrty" action="/upload">
+  {% csrf-field %}
+  <p>Base: <input type="text" name="base" value="" /></p>
+  <p>Translation: <input type="text" name="translation" value="" /></p>
+  <p>tags: <input type="text" name="tags" value="" /></p>
+  <input type="submit" value="add entry" />
+</form>
+
+<p> Dictionary content</p>
+<table>
+  <tr>
+    <td>base</td>
+    <td>translation</td>
+    <td>tags</td>
+  </tr>
+{% for item in dictionary %}
+<tr>
+  <td>{{item.base}}</td>
+  <td>{{item.translation}}</td>
+  <td>{{item.tag}}</td>
+</tr>
+  {% endfor %}
+</table>
+{% endblock %}

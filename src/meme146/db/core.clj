@@ -33,12 +33,7 @@
 
 
 (defn add-translation!
-  ([base translation]
-   (mc/insert @db "dictionary"
-              {:_id (oid)
-               :base base
-               :translation translation
-               :tag "default"}))
+
   ([base translation tag]
    (mc/insert @db "dictionary"
               {:_id (oid)
@@ -46,5 +41,11 @@
                :translation translation
                :tag tag})))
 
+
 (defn add-dictionary! [collection]
   (mc/insert-batch @db "dictionary" collection))
+
+(defn get-dictionary []
+  (mc/find-maps @db "dictionary"))
+
+(get-dictionary)
