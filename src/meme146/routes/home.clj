@@ -5,8 +5,10 @@
             [ring.util.response :refer [redirect]]
             [clojure.java.io :as io]
             [meme146.db.core :as db]
+            [clojure-csv.core :as csv]
             [bouncer.core :as b]
-            [bouncer.validators :as v]))
+            [bouncer.validators :as v])
+  (:import [java.io File FileInputStream FileOutputStream]))
 
 (defn home-page []
   (layout/render "home.html"))
@@ -26,14 +28,44 @@
     :base v/required
     :translation v/required)))
 
-(defn upload! [{:keys [params]}]
+(defn add-enrty [{:keys [params]}]
   (do
-    (apply db/add-translation (vals (dissoc params :__anti-forgery-token)))
+    (apply db/add-entry!
+           (select-keys params
+                        [:base :translation :tag]))
+    (redirect "/dictionary")))
+
+(defn edit-entry [{:keys [params]}]
+  (do
+    (db/update-entry!
+     (:id params)
+     (select-keys params [:base :translation :tag]))
+    (redirect "/dictionary")))
+
+(defn upload-csv [{:keys [params]}]
+  (do
+    (with-open [file (io/reader (:tempfile (:csv-upload params)))]
+      (db/add-dictionary!  (map (fn [record]
+                                    {:base (first record)
+                                     :translation (second record)
+                                     :tag (:tags params)})
+                                  (csv/parse-csv (slurp file)))))
+    (redirect "/dictionary")))
+
+(defn process-csv [csv-seq]
+  )
+
+(defn remove-entry [{:keys [params]}]
+  (do
+    (db/remove-entry! (:id params))
     (redirect "/dictionary")))
 
 (defroutes home-routes
   (GET "/" [] (home-page))
   (GET "/docs" [] (ok (-> "docs/docs.md" io/resource slurp)))
   (GET "/upload" [] (upload-page))
-  (POST "/upload" request (upload! request))
-  (GET "/dictionary" [] (dictionary-page)))
+  (POST "/upload" request (add-enrty request))
+  (POST "/upload/batch" request (upload-csv request))
+  (GET "/dictionary" [] (dictionary-page))
+  (POST "/dictionary/remove" request (remove-entry request))
+  (POST "/dictionary/edit" request (edit-entry request)))

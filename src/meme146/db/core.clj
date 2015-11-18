@@ -10,6 +10,8 @@
 
 (defn oid [] (ObjectId.))
 
+(def dictionary "dictionary")
+
 (defn connect! []
   ;; Tries to get the Mongo URI from the environment variable
   (reset! db (-> (:database-url env) mg/connect-via-uri :db)))
@@ -32,20 +34,21 @@
   (mc/find-one-as-map @db "users" {:_id id}))
 
 
-(defn add-translation!
-
-  ([base translation tag]
-   (mc/insert @db "dictionary"
-              {:_id (oid)
-               :base base
-               :translation translation
-               :tag tag})))
-
+(defn add-entry! [base translation tag]
+  (mc/insert @db dictionary
+             {:_id (oid)
+              :base base
+              :translation translation
+              :tag tag}))
 
 (defn add-dictionary! [collection]
-  (mc/insert-batch @db "dictionary" collection))
+  (mc/insert-batch @db dictionary collection))
+
+(defn remove-entry! [id]
+  (mc/remove-by-id @db dictionary (ObjectId. id)))
 
 (defn get-dictionary []
-  (mc/find-maps @db "dictionary"))
+  (mc/find-maps @db dictionary))
 
-(get-dictionary)
+(defn update-entry! [id data]
+  (mc/update-by-id @db dictionary (ObjectId. id) data))

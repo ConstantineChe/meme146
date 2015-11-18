@@ -3,12 +3,17 @@
 <h>Dictionary page</h>
 <p>You can load csv</p>
 <p>load</p>
+<form method="POST" enctype="multipart/form-data" id="add-csv" action="/upload/batch">
+  {% csrf-field %}
+  <input type="file" name="csv-upload" />
+  <input type="submit" value="upload" />
+</form>
 <p>Or add an entry</p>
-<form method="POST" id="add-enrty" action="/upload">
+<form method="POST" id="new-enrty-form" action="/upload">
   {% csrf-field %}
   <p>Base: <input type="text" name="base" value="" /></p>
   <p>Translation: <input type="text" name="translation" value="" /></p>
-  <p>tags: <input type="text" name="tags" value="" /></p>
+  <p>tags: <input type="text" name="tag" value="" /></p>
   <input type="submit" value="add entry" />
 </form>
 
@@ -20,10 +25,25 @@
     <td>tags</td>
   </tr>
 {% for item in dictionary %}
-<tr>
+<tr id="{{item._id}}">
   <td>{{item.base}}</td>
   <td>{{item.translation}}</td>
   <td>{{item.tag}}</td>
+  <td><form method="POST" id="remove-form" action="/dictionary/remove">
+      {% csrf-field %}
+      <input type="hidden" name="id" value="{{item._id}}" />
+      <input type="submit" value="remove" />
+    </form>
+  </td>
+  <td><form method="POST" id="edit-form" action="/dictionary/edit">
+      {% csrf-field %}
+      <input type="hidden" name="id" value="{{item._id}}" />
+      Base: <input type="text" name="base" value="{{item.base}}" />
+      Translation: <input type="text" name="translation" value="{{item.translation}}" />
+      tags: <input type="text" name="tag" value="{{item.tag}}" />
+      <input type="submit" value="edit entry" />
+    </form>
+  </td>
 </tr>
   {% endfor %}
 </table>

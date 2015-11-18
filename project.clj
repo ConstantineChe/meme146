@@ -32,7 +32,8 @@
                  [org.clojure/core.async "0.2.371"]
                  [cljs-ajax "0.5.1"]
                  [org.immutant/web "2.1.0" :exclusions [ch.qos.logback/logback-classic]]
-                 [clojure-csv/clojure-csv "2.0.1"]]
+                 [clojure-csv/clojure-csv "2.0.1"]
+                 [lib-noir "0.9.9"]]
 
   :min-lein-version "2.0.0"
   :uberjar-name "meme146.jar"
