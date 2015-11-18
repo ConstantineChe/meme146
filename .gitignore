@@ -8,4 +8,4 @@ pom.xml
 /.lein-*
 profiles.clj
 /.env
-*.log
+*.log.*
