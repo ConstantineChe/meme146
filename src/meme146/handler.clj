@@ -20,7 +20,7 @@
   (timbre/merge-config!
     {:level     (if (env :dev) :trace :info)
      :appenders {:rotor (rotor/rotor-appender
-                          {:path "meme146.log"
+                          {:path "log/meme146.log"
                            :max-size (* 512 1024)
                            :backlog 10})}})
 
