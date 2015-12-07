@@ -8,7 +8,9 @@
             [environ.core :refer [env]]
             [hiccup.core :as hc]
             [hiccup.page :as hp]
-            [hiccup.bootstrap.page :as hbp]))
+            [hiccup.bootstrap.page :as hbp]
+            [hiccup.def :refer :all
+             ]))
 
 (declare ^:dynamic *identity*)
 (declare ^:dynamic *app-context*)
@@ -16,12 +18,36 @@
 (parser/add-tag! :csrf-field (fn [_ _] (anti-forgery-field)))
 (filters/add-filter! :markdown (fn [content] [:safe (md-to-html-string content)]))
 
+(defelem navbar [menu]
+  [:nav {:class "navbar"}
+   [:div {:class "container"}
+    [:div {:class "navbar-header"}
+     [:button {:type "button"
+               :class "navbar-toggle collapsed"
+               :data-toggle "collapse"
+               :data-target "#navbar"
+               :aria-extended "false"
+               :aria-controls "navbar"}
+      (for [_ (range 3)] [:span {:class :icon-bar}])
+      ]
+     [:a {:class "navbar-brand" :href "#"} "Meme146"]]
+    [:div {:id "navbar" :class "collapse navbar-collapse"}
+     [:ul {:class "nav navbar-nav"}
+      (for [item menu] [:li item])]]]])
+
 (def base-tpl (fn [title content]
-                (hc/html5
+                (hp/html5
                  [:head
                   [:title title]
-                  (hc/include-js)
-                  ()])))
+                  (hp/include-js "https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js")
+                  (hbp/include-bootstrap)]
+                 [:body (navbar [
+                                 [:a {:href "#"} "Home"]
+                                 [:a {:href "#about"} "About"]
+                                 [:a {:href "#contact"} "Contact"]
+                                 ]) content])))
+
+
 
 (defn render
   "renders the HTML template located relative to resources/templates"
@@ -38,7 +64,9 @@
     "text/html; charset=utf-8"))
 
 (defn render-home [welcome-msg]
-  ())
+  (base-tpl "home bootstrap" welcome-msg))
+
+
 
 (defn error-page
   "error-details should be a map containing the following keys:

@@ -60,6 +60,7 @@
     (redirect "/dictionary")))
 
 (defroutes home-routes
+  (GET "/boot/:msg" [msg] (layout/render-home [:h1 msg]))
   (GET "/" [] (home-page))
   (GET "/docs" [] (ok (-> "docs/docs.md" io/resource slurp)))
   (GET "/upload" [] (upload-page))
