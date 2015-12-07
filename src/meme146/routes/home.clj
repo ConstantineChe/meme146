@@ -7,8 +7,7 @@
             [meme146.db.core :as db]
             [clojure-csv.core :as csv]
             [bouncer.core :as b]
-            [bouncer.validators :as v])
-  (:import [java.io File FileInputStream FileOutputStream]))
+            [bouncer.validators :as v]))
 
 (defn home-page []
   (layout/render "home.html"))

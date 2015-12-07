@@ -15,6 +15,7 @@
             [buddy.auth.backends.session :refer [session-backend]]
             [buddy.auth.accessrules :refer [restrict]]
             [buddy.auth :refer [authenticated?]]
+            [hiccup.bootstrap.middleware :refer [wrap-bootstrap-resources]]
             [meme146.layout :refer [*identity*]])
   (:import [javax.servlet ServletContext]))
 
@@ -94,4 +95,5 @@
             (assoc-in [:security :anti-forgery] false)
             (dissoc :session)))
       wrap-context
-      wrap-internal-error))
+      wrap-internal-error
+      wrap-bootstrap-resources))

@@ -21,7 +21,7 @@
     {:level     (if (env :dev) :trace :info)
      :appenders {:rotor (rotor/rotor-appender
                           {:path "log/meme146.log"
-                           :max-size (* 512 1024)
+                           :max-size (* 1024 1024)
                            :backlog 10})}})
 
   (if (env :dev) (parser/cache-off!))

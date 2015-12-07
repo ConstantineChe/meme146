@@ -5,6 +5,8 @@
 
   :dependencies [[org.clojure/clojure "1.7.0"]
                  [selmer "0.9.5"]
+                 [hiccup "1.0.5"]
+                 [hiccup-bootstrap-3 "0.2.0-SNAPSHOT"]
                  [com.taoensso/timbre "4.1.4"]
                  [com.taoensso/tower "3.0.2"]
                  [markdown-clj "0.9.79"]
