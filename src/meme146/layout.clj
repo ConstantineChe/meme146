@@ -19,7 +19,7 @@
 (filters/add-filter! :markdown (fn [content] [:safe (md-to-html-string content)]))
 
 (defelem navbar [menu]
-  [:nav {:class "navbar"}
+  [:nav {:class "navbar navbar-inverse navbar-fixed-top"}
    [:div {:class "container"}
     [:div {:class "navbar-header"}
      [:button {:type "button"
@@ -28,7 +28,7 @@
                :data-target "#navbar"
                :aria-extended "false"
                :aria-controls "navbar"}
-      (for [_ (range 3)] [:span {:class :icon-bar}])
+      (for [_ menu] [:span {:class :icon-bar}])
       ]
      [:a {:class "navbar-brand" :href "#"} "Meme146"]]
     [:div {:id "navbar" :class "collapse navbar-collapse"}
@@ -45,7 +45,8 @@
                                  [:a {:href "#"} "Home"]
                                  [:a {:href "#about"} "About"]
                                  [:a {:href "#contact"} "Contact"]
-                                 ]) content])))
+                                 ])
+                  [:div {:class "container"} content]])))
 
 
 
