@@ -6,11 +6,7 @@
             [ring.util.anti-forgery :refer [anti-forgery-field]]
             [ring.middleware.anti-forgery :refer [*anti-forgery-token*]]
             [environ.core :refer [env]]
-            [hiccup.core :as hc]
-            [hiccup.page :as hp]
-            [hiccup.bootstrap.page :as hbp]
-            [hiccup.def :refer :all
-             ]))
+            [meme146.templates.core :as templates]))
 
 (declare ^:dynamic *identity*)
 (declare ^:dynamic *app-context*)
@@ -18,35 +14,7 @@
 (parser/add-tag! :csrf-field (fn [_ _] (anti-forgery-field)))
 (filters/add-filter! :markdown (fn [content] [:safe (md-to-html-string content)]))
 
-(defelem navbar [menu]
-  [:nav {:class "navbar navbar-inverse navbar-fixed-top"}
-   [:div {:class "container"}
-    [:div {:class "navbar-header"}
-     [:button {:type "button"
-               :class "navbar-toggle collapsed"
-               :data-toggle "collapse"
-               :data-target "#navbar"
-               :aria-extended "false"
-               :aria-controls "navbar"}
-      (for [_ menu] [:span {:class :icon-bar}])
-      ]
-     [:a {:class "navbar-brand" :href "#"} "Meme146"]]
-    [:div {:id "navbar" :class "collapse navbar-collapse"}
-     [:ul {:class "nav navbar-nav"}
-      (for [item menu] [:li item])]]]])
 
-(def base-tpl (fn [title content]
-                (hp/html5
-                 [:head
-                  [:title title]
-                  (hp/include-js "https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js")
-                  (hbp/include-bootstrap)]
-                 [:body (navbar [
-                                 [:a {:href "#"} "Home"]
-                                 [:a {:href "#about"} "About"]
-                                 [:a {:href "#contact"} "Contact"]
-                                 ])
-                  [:div {:class "container"} content]])))
 
 
 
@@ -64,8 +32,8 @@
           :servlet-context *app-context*)))
     "text/html; charset=utf-8"))
 
-(defn render-home [welcome-msg]
-  (base-tpl "home bootstrap" welcome-msg))
+(defn render-hiccup [welcome-msg]
+  (templates/base-template "home bootstrap" welcome-msg))
 
 
 
