@@ -47,7 +47,7 @@
 
   :plugins [[lein-environ "1.0.1"]
             [lein-cljsbuild "1.1.1"]
-            [lein-garden "0.2.6"]]
+            [lein-garden "0.2.4"]]
   :clean-targets ^{:protect false} [:target-path [:cljsbuild :builds :app :compiler :output-dir] [:cljsbuild :builds :app :compiler :output-to]]
   :cljsbuild
   {:builds
@@ -60,12 +60,12 @@
       :pretty-print true}}}}
 
   :garden {:builds [{:id "main"
-                     :source-paths ["src/styles"]
-                     :stylesheet meme146.core/main
-                     :compiler {:output-to "resources/css/main.css"
+                     :source-paths ["garden"]
+                     :stylesheet meme146.core/main-styles
+                     :compiler {:output-to "resources/public/css/main.css"
                                 :pretty-print? true}}]}
 
-  :prep-tasks [["garden" "once"]]
+;  :prep-tasks [["garden" "once"]]
 
   :profiles
   {:uberjar {:omit-source true
