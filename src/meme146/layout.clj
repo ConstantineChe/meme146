@@ -6,7 +6,7 @@
             [ring.util.anti-forgery :refer [anti-forgery-field]]
             [ring.middleware.anti-forgery :refer [*anti-forgery-token*]]
             [environ.core :refer [env]]
-            [meme146.templates.core :as templates]))
+            [meme146.view.templates.core :as templates]))
 
 (declare ^:dynamic *identity*)
 (declare ^:dynamic *app-context*)

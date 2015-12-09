@@ -1,4 +1,4 @@
-(ns meme146.templates.core
+(ns meme146.view.templates.core
   (:require
    [hiccup.core :as hc]
    [hiccup.page :as hp]

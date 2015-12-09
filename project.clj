@@ -1,6 +1,6 @@
 (defproject meme146 "0.1.0-SNAPSHOT"
 
-  :description "FIXME: write description"
+  :description "My life is a fucking MEME(FIXME - I need a fix.)"
   :url "http://example.com/FIXME"
 
   :dependencies [[org.clojure/clojure "1.7.0"]
@@ -35,7 +35,8 @@
                  [cljs-ajax "0.5.1"]
                  [org.immutant/web "2.1.0" :exclusions [ch.qos.logback/logback-classic]]
                  [clojure-csv/clojure-csv "2.0.1"]
-                 [lib-noir "0.9.9"]]
+                 [lib-noir "0.9.9"]
+                 [garden "1.3.0"]]
 
   :min-lein-version "2.0.0"
   :uberjar-name "meme146.jar"
@@ -45,7 +46,8 @@
   :main meme146.core
 
   :plugins [[lein-environ "1.0.1"]
-            [lein-cljsbuild "1.1.1"]]
+            [lein-cljsbuild "1.1.1"]
+            [lein-garden "0.2.6"]]
   :clean-targets ^{:protect false} [:target-path [:cljsbuild :builds :app :compiler :output-dir] [:cljsbuild :builds :app :compiler :output-to]]
   :cljsbuild
   {:builds
@@ -56,6 +58,14 @@
       :output-dir "target/cljsbuild/public/js/out"
       :externs ["react/externs/react.js"]
       :pretty-print true}}}}
+
+  :garden {:builds [{:id "main"
+                     :source-paths ["src/styles"]
+                     :stylesheet meme146.core/main
+                     :compiler {:output-to "resources/css/main.css"
+                                :pretty-print? true}}]}
+
+  :prep-tasks [["garden" "once"]]
 
   :profiles
   {:uberjar {:omit-source true
