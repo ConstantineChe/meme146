@@ -16,9 +16,7 @@
   (layout/render "upload.html"))
 
 (defn dictionary-page []
-  (layout/render
-   "dictionary.html"
-   {:dictionary (db/get-dictionary)}))
+  (layout/render-dictionary (db/get-dictionary)))
 
 (defn validate-dic-entry [params]
   (first
@@ -61,7 +59,7 @@
 
 (defroutes home-routes
   (GET "/boot/:msg" [msg] (layout/render-hiccup [:h1 msg]))
-  (GET "/" [] (home-page))
+  (GET "/" [] (layout/render-hiccup [:h1 "Welcome %username%"]))
   (GET "/docs" [] (ok (-> "docs/docs.md" io/resource slurp)))
   (GET "/upload" [] (upload-page))
   (POST "/upload" request (add-enrty request))

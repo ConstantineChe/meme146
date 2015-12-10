@@ -53,9 +53,28 @@
 
 (defn base-template [title content]
   (blank-page title (list (header (map #(apply el/link-to %)
-                                       (partition 2 ["#" "Home"
-                                                     "#about" "About2"
-                                                     "#contact" "Contact"
-                                                     ])))
+                                       [["/" "Home"]
+                                        ["/dictionary" "Dictionary"]
+                                        ["user" "Account"]
+                                          ]))
                         [:div {:class "main-content"}
                          [:div {:class "container"} content]])))
+
+
+(defn dictionary-view [dictionary]
+  (base-template "Dictionary"
+                 (list [:div {:class "container about"} [:h4 "This is a dictionary view page"]]
+                  [:div {:class "container"} [:h4 "dictionary contents"]
+                   [:table {:class "table table-hover"}
+                    [:thead
+                     [:tr
+                      [:th "base"]
+                      [:th "translation"]
+                      [:th "tag"]]]
+                    [:tbody
+                     (for [row dictionary]
+                       [:tr
+                        [:td (:base row)]
+                        [:td (:translation row)]
+                        [:td (:tag row)]])]]]))
+  )

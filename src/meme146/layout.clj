@@ -35,6 +35,8 @@
 (defn render-hiccup [welcome-msg]
   (templates/base-template "home bootstrap" welcome-msg))
 
+(defn render-dictionary [dictionary]
+  (templates/dictionary-view dictionary))
 
 
 (defn error-page

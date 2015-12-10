@@ -6,7 +6,6 @@
   :dependencies [[org.clojure/clojure "1.7.0"]
                  [selmer "0.9.5"]
                  [hiccup "1.0.5"]
-                 [hiccup-bootstrap-3 "0.2.0-SNAPSHOT"]
                  [com.taoensso/timbre "4.1.4"]
                  [com.taoensso/tower "3.0.2"]
                  [markdown-clj "0.9.79"]
@@ -48,7 +47,7 @@
   :plugins [[lein-environ "1.0.1"]
             [lein-cljsbuild "1.1.1"]
             [lein-garden "0.2.4"]]
-  :clean-targets ^{:protect false} [:target-path [:cljsbuild :builds :app :compiler :output-dir] [:cljsbuild :builds :app :compiler :output-to]]
+  :clean-targets ^{:protect false} [:target-path [:cljsbuild :builds :app :compiler :output-dir] put-to]
   :cljsbuild
   {:builds
    {:app
@@ -105,7 +104,9 @@
                   ;;when :nrepl-port is set the application starts the nREPL server on load
                   :env {:dev        true
                         :port       3000
-                        :nrepl-port 7000}}
+                        :nrepl-port 7000
+                        :database-url "mongodb://127.0.0.1/meme146_dev"
+                        :log-level :trace}}
    :project/test {:env {:test       true
                         :port       3001
                         :nrepl-port 7001}}
