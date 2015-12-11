@@ -12,30 +12,30 @@
         (hp/include-css "/bootstrap/css/bootstrap-glyphicons.css")))
 
 (defelem navbar [menu]
-  [:nav {:class "navbar navbar-inverse navbar-default"}
-   [:div {:class "container"}
-    [:div {:class "navbar-header"}
-     [:button {:type "button"
-               :class "navbar-toggle collapsed"
+  [:nav.navbar.navbar-inverse.navbar-default
+   [:div.container
+    [:div.navbar-header
+     [:button.navbar-toggle.collapsed {:type "button"
                :data-toggle "collapse"
                :data-target "#navbar"
                :aria-extended "false"
                :aria-controls "navbar"}
-      [:span {:class "sr-only"} "Toggle navigation"]
-      (for [_ menu] [:span {:class "icon-bar"}])
+      [:span.sr-only "Toggle navigation"]
+      (for [_ menu] [:span.icon-bar])
       ]
      (el/link-to {:class "navbar-brand"} "#" "Meme146")]
-    [:div {:id "navbar" :class "collapse navbar-collapse"}
+    [:div#navbar.collapse.navbar-collapse
      (el/unordered-list {:class "nav navbar-nav"} menu)
      ]]])
 
 (defelem header [menu]
-  [:header {:class "header"} [:div {:class "container main-header"}
-                              [:div {:class :row}
-                               [:div {:class :col-sm-8}
-                                [:h1 {:class "text-uppercase"} "memes"]]
-                               [:div {:class "col-sm-2 pull-right"}
-                                [:h3 "Lang"]]]]
+  [:header.header
+   [:div.container.main-header
+    [:div.row
+     [:div.col-sm-8
+      [:h1.text-uppercase "memes"]]
+     [:div.col-sm-2.pull-right
+      [:h3 "Lang"]]]]
    (navbar menu)])
 
 (defhtml blank-page [title content]
@@ -47,8 +47,8 @@
    [:title title]
    (hp/include-css "/css/main.css")]
   [:body
-   [:div {:class "main"}
-    [:div {:class "container"} content]]]
+   [:div.main
+    [:div.container content]]]
   )
 
 (defn base-template [title content]
@@ -57,15 +57,15 @@
                                         ["/dictionary" "Dictionary"]
                                         ["user" "Account"]
                                           ]))
-                        [:div {:class "main-content"}
-                         [:div {:class "container"} content]])))
+                        [:div.main-content
+                         [:div.container content]])))
 
 
 (defn dictionary-view [dictionary]
   (base-template "Dictionary"
-                 (list [:div {:class "container about"} [:h4 "This is a dictionary view page"]]
-                  [:div {:class "container"} [:h4 "dictionary contents"]
-                   [:table {:class "table table-hover"}
+                 (list [:div.container.about [:h4 "This is a dictionary view page"]]
+                  [:div.container  [:h4 "dictionary contents"]
+                   [:table.table.table-hover
                     [:thead
                      [:tr
                       [:th "base"]

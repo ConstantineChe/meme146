@@ -23,7 +23,7 @@
                  [org.webjars/bootstrap "3.3.5"]
                  [org.webjars/jquery "2.1.4"]
                  [com.fzakaria/slf4j-timbre "0.2.1"]
-                 [buddy "0.7.2"]
+                 [buddy "0.8.3"]
                  [com.novemberain/monger "3.0.0-rc2"]
                  [org.clojure/clojurescript "1.7.170" :scope "provided"]
                  [reagent "0.5.1"]
