@@ -8,8 +8,7 @@
 (defn include-bootstrap []
   (list (hp/include-js "https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js")
         (hp/include-js "/bootstrap/js/bootstrap.js")
-        (hp/include-css "/bootstrap/css/bootstrap.css")
-        (hp/include-css "/bootstrap/css/bootstrap-glyphicons.css")))
+        (hp/include-css "/bootstrap/css/bootstrap.css")))
 
 (defelem navbar [menu]
   [:nav.navbar.navbar-inverse.navbar-default
@@ -48,8 +47,7 @@
    (hp/include-css "/css/main.css")]
   [:body
    [:div.main
-    [:div.container content]]]
-  )
+    [:div.container content]]])
 
 (defn base-template [title content]
   (blank-page title (list (header (map #(apply el/link-to %)
@@ -76,5 +74,4 @@
                        [:tr
                         [:td (:base row)]
                         [:td (:translation row)]
-                        [:td (:tag row)]])]]]))
-  )
+                        [:td (:tag row)]])]]])))

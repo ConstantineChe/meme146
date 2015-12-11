@@ -15,7 +15,6 @@
             [buddy.auth.backends.session :refer [session-backend]]
             [buddy.auth.accessrules :refer [restrict]]
             [buddy.auth :refer [authenticated?]]
-            [hiccup.bootstrap.middleware :refer [wrap-bootstrap-resources]]
             [meme146.layout :refer [*identity*]])
   (:import [javax.servlet ServletContext]))
 

@@ -7,7 +7,8 @@
             [meme146.db.core :as db]
             [clojure-csv.core :as csv]
             [bouncer.core :as b]
-            [bouncer.validators :as v]))
+            [bouncer.validators :as v]
+            [buddy.auth :refer [authenticated?]]))
 
 (defn home-page []
   (layout/render "home.html"))
@@ -57,9 +58,18 @@
     (db/remove-entry! (:id params))
     (redirect "/dictionary")))
 
+(defn user-page [request]
+  (if (authenticated? request) (layout/render-hiccup [:h1 "%username%"])
+      (redirect "/login")))
+
+(defn login-page [request]
+  (layout/render-hiccup [:h1 "login"]))
+
 (defroutes home-routes
   (GET "/boot/:msg" [msg] (layout/render-hiccup [:h1 msg]))
   (GET "/" [] (layout/render-hiccup [:h1 "Welcome %username%"]))
+  (GET "/user" [] user-page)
+  (GET "/login" [] login-page)
   (GET "/docs" [] (ok (-> "docs/docs.md" io/resource slurp)))
   (GET "/upload" [] (upload-page))
   (POST "/upload" request (add-enrty request))
