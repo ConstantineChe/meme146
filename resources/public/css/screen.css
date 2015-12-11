@@ -4,6 +4,13 @@ body {
     height: 100%;
     padding-top: 40px;
 }
+header {
+    position: fixed;
+    left: 0;
+    right: 0;
+    padding-left: 0;
+    padding-right: 0;
+}
 {% if cljs %}
 @-moz-keyframes three-quarters-loader {
     0% {

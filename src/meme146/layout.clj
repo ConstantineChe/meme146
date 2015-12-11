@@ -6,9 +6,7 @@
             [ring.util.anti-forgery :refer [anti-forgery-field]]
             [ring.middleware.anti-forgery :refer [*anti-forgery-token*]]
             [environ.core :refer [env]]
-            [hiccup.core :as hc]
-            [hiccup.page :as hp]
-            [hiccup.bootstrap.page :as hbp]))
+            [meme146.view.templates.core :as templates]))
 
 (declare ^:dynamic *identity*)
 (declare ^:dynamic *app-context*)
@@ -16,12 +14,9 @@
 (parser/add-tag! :csrf-field (fn [_ _] (anti-forgery-field)))
 (filters/add-filter! :markdown (fn [content] [:safe (md-to-html-string content)]))
 
-(def base-tpl (fn [title content]
-                (hc/html5
-                 [:head
-                  [:title title]
-                  (hc/include-js)
-                  ()])))
+
+
+
 
 (defn render
   "renders the HTML template located relative to resources/templates"
@@ -37,8 +32,12 @@
           :servlet-context *app-context*)))
     "text/html; charset=utf-8"))
 
-(defn render-home [welcome-msg]
-  ())
+(defn render-hiccup [welcome-msg]
+  (templates/base-template "home bootstrap" welcome-msg))
+
+(defn render-dictionary [dictionary]
+  (templates/dictionary-view dictionary))
+
 
 (defn error-page
   "error-details should be a map containing the following keys:

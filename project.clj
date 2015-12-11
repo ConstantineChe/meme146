@@ -1,12 +1,11 @@
 (defproject meme146 "0.1.0-SNAPSHOT"
 
-  :description "FIXME: write description"
+  :description "My life is a fucking MEME(FIXME - I need a fix.)"
   :url "http://example.com/FIXME"
 
   :dependencies [[org.clojure/clojure "1.7.0"]
                  [selmer "0.9.5"]
                  [hiccup "1.0.5"]
-                 [hiccup-bootstrap-3 "0.2.0-SNAPSHOT"]
                  [com.taoensso/timbre "4.1.4"]
                  [com.taoensso/tower "3.0.2"]
                  [markdown-clj "0.9.79"]
@@ -24,7 +23,7 @@
                  [org.webjars/bootstrap "3.3.5"]
                  [org.webjars/jquery "2.1.4"]
                  [com.fzakaria/slf4j-timbre "0.2.1"]
-                 [buddy "0.7.2"]
+                 [buddy "0.8.3"]
                  [com.novemberain/monger "3.0.0-rc2"]
                  [org.clojure/clojurescript "1.7.170" :scope "provided"]
                  [reagent "0.5.1"]
@@ -35,7 +34,8 @@
                  [cljs-ajax "0.5.1"]
                  [org.immutant/web "2.1.0" :exclusions [ch.qos.logback/logback-classic]]
                  [clojure-csv/clojure-csv "2.0.1"]
-                 [lib-noir "0.9.9"]]
+                 [lib-noir "0.9.9"]
+                 [garden "1.3.0"]]
 
   :min-lein-version "2.0.0"
   :uberjar-name "meme146.jar"
@@ -45,8 +45,9 @@
   :main meme146.core
 
   :plugins [[lein-environ "1.0.1"]
-            [lein-cljsbuild "1.1.1"]]
-  :clean-targets ^{:protect false} [:target-path [:cljsbuild :builds :app :compiler :output-dir] [:cljsbuild :builds :app :compiler :output-to]]
+            [lein-cljsbuild "1.1.1"]
+            [lein-garden "0.2.4"]]
+  :clean-targets ^{:protect false} [:target-path [:cljsbuild :builds :app :compiler :output-dir] put-to]
   :cljsbuild
   {:builds
    {:app
@@ -56,6 +57,14 @@
       :output-dir "target/cljsbuild/public/js/out"
       :externs ["react/externs/react.js"]
       :pretty-print true}}}}
+
+  :garden {:builds [{:id "main"
+                     :source-paths ["garden"]
+                     :stylesheet meme146.core/main-styles
+                     :compiler {:output-to "resources/public/css/main.css"
+                                :pretty-print? true}}]}
+
+;  :prep-tasks [["garden" "once"]]
 
   :profiles
   {:uberjar {:omit-source true
@@ -95,7 +104,9 @@
                   ;;when :nrepl-port is set the application starts the nREPL server on load
                   :env {:dev        true
                         :port       3000
-                        :nrepl-port 7000}}
+                        :nrepl-port 7000
+                        :database-url "mongodb://127.0.0.1/meme146_dev"
+                        :log-level :trace}}
    :project/test {:env {:test       true
                         :port       3001
                         :nrepl-port 7001}}

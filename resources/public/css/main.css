@@ -1,0 +1,11 @@
+header {
+  position: fixed;
+  padding-left: 0;
+  padding-right: 0;
+  left: 0;
+  right: 0;
+}
+
+.main-content {
+  padding-top: 125px;
+}
