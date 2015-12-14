@@ -1,6 +1,5 @@
 (ns meme146.view.templates.core
   (:require
-   [clojure.string :refer [join]]
    [hiccup.core :as hc]
    [hiccup.page :as hp]
    [hiccup.element :as el]
@@ -36,7 +35,7 @@
      [:div.col-sm-8
       [:h1.text-uppercase "memes"]]
      [:div.col-sm-2.pull-right
-      [:h3 "Lang"]]]]
+      [:h4 "Lang"]]]]
    (navbar menu)])
 
 (defhtml blank-page [title content]
@@ -88,13 +87,13 @@
 
 (defelem submin-button [text]
   [:div.control-group
-     [:div.controls [:button.btn.btn-success text]]])
+     [:div.controls [:p] [:button.btn.btn-lg.btn-primary text]]])
 
 (defn sign-up [csrf]
   (base-template "Sign-up"
                  (form/form-to {:class "form-horizontal"} [:post "/sign-up"]
                                [:fieldset [:div#legend [:legend "Sign-up"]]
-                                (form/hidden-field "__anti_forgery_token" csrf)
+                                csrf
                                 (input-text "Username" "username"
                                             (str "Username can contain letters"
                                                  " and numbers without spaces"))

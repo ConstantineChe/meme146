@@ -58,10 +58,17 @@
     (db/remove-entry! (:id params))
     (redirect "/dictionary")))
 
+(defn validate-registration [params]
+  (first (b/validate
+          params
+          :username v/required
+          :email v/required)))
+
 (defn user-page [request]
   (if (authenticated? request)
     (layout/render-hiccup [:h1 "%username%"])
-    (redirect "/login")))
+    (redirect "/login")
+    ))
 
 (defn login-page [request]
   (layout/render-hiccup [:div.container
@@ -73,18 +80,21 @@
 (defn sign-up-page [request]
   (layout/sign-up))
 
-(defn sign-up [request])
+(defn sign-up [params]
+  (if-let [errors (validate-registration params)]
+    (-> (redirect "/sign-up")
+        (assoc :flash (assoc params :errors errors)))
+    (redirect (str "/boot/" (:username params)))))
 
 (defroutes home-routes
   (GET "/boot/:msg" [msg] (layout/render-hiccup [:h1 msg]))
   (GET "/" [] (layout/render-hiccup [:div.container
-                                     [:h1 "Welcome %username%"]                                     ]
-                                    ))
+                                     [:h1 "Welcome %username%"]]))
   (GET "/user" [] user-page)
   (GET "/login" [] login-page)
   (POST "/login" [] authenticate)
   (GET "/sign-up" [] sign-up-page)
-  (POST "/sign-up" [] sign-up)
+  (POST "/sign-up" [params] sign-up)
   (GET "/docs" [] (ok (-> "docs/docs.md" io/resource slurp)))
   (GET "/upload" [] (upload-page))
   (POST "/upload" request (add-enrty request))

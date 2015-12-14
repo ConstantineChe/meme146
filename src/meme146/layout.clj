@@ -39,7 +39,7 @@
   (templates/dictionary-view dictionary))
 
 (defn sign-up []
-  (templates/sign-up *anti-forgery-token*))
+  (templates/sign-up (anti-forgery-field)))
 
 
 (defn error-page
