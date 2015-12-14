@@ -8,7 +8,8 @@
             [clojure-csv.core :as csv]
             [bouncer.core :as b]
             [bouncer.validators :as v]
-            [buddy.auth :refer [authenticated?]]))
+            [buddy.auth :refer [authenticated?]]
+            [buddy.hashers :refer [encrypt check]]))
 
 (defn home-page []
   (layout/render "home.html"))
@@ -78,9 +79,9 @@
 (defn authenticate [request])
 
 (defn sign-up-page [request]
-  (layout/sign-up))
+  (layout/sign-up (:errors request)))
 
-(defn sign-up [params]
+(defn sign-up [{:keys [params]}]
   (if-let [errors (validate-registration params)]
     (-> (redirect "/sign-up")
         (assoc :flash (assoc params :errors errors)))

@@ -89,10 +89,11 @@
   [:div.control-group
      [:div.controls [:p] [:button.btn.btn-lg.btn-primary text]]])
 
-(defn sign-up [csrf]
+(defn sign-up [csrf errors]
   (base-template "Sign-up"
                  (form/form-to {:class "form-horizontal"} [:post "/sign-up"]
                                [:fieldset [:div#legend [:legend "Sign-up"]]
+                                (when-not (empty? errors) [:div.error-msg errors])
                                 csrf
                                 (input-text "Username" "username"
                                             (str "Username can contain letters"

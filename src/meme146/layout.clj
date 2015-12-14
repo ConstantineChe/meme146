@@ -38,8 +38,8 @@
 (defn render-dictionary [dictionary]
   (templates/dictionary-view dictionary))
 
-(defn sign-up []
-  (templates/sign-up (anti-forgery-field)))
+(defn sign-up [errors]
+  (templates/sign-up (anti-forgery-field) errors))
 
 
 (defn error-page
