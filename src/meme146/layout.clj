@@ -38,6 +38,9 @@
 (defn render-dictionary [dictionary]
   (templates/dictionary-view dictionary))
 
+(defn sign-up []
+  (templates/sign-up *anti-forgery-token*))
+
 
 (defn error-page
   "error-details should be a map containing the following keys:

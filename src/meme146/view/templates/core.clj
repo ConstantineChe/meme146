@@ -1,8 +1,10 @@
 (ns meme146.view.templates.core
   (:require
+   [clojure.string :refer [join]]
    [hiccup.core :as hc]
    [hiccup.page :as hp]
    [hiccup.element :as el]
+   [hiccup.form :as form]
    [hiccup.def :refer :all]))
 
 (defn include-bootstrap []
@@ -75,3 +77,31 @@
                         [:td (:base row)]
                         [:td (:translation row)]
                         [:td (:tag row)]])]]])))
+
+
+(defelem input-text [label field comment]
+  (list [:label.control-label {:for field} label]
+   [:div.control-group
+    [:div.controls [:p.help-block comment]
+     (form/text-field {:class "input-xlarge required"}
+                      field)]]))
+
+(defelem submin-button [text]
+  [:div.control-group
+     [:div.controls [:button.btn.btn-success text]]])
+
+(defn sign-up [csrf]
+  (base-template "Sign-up"
+                 (form/form-to {:class "form-horizontal"} [:post "/sign-up"]
+                               [:fieldset [:div#legend [:legend "Sign-up"]]
+                                (form/hidden-field "__anti_forgery_token" csrf)
+                                (input-text "Username" "username"
+                                            (str "Username can contain letters"
+                                                 " and numbers without spaces"))
+                                (input-text "Email" "email" "")
+                                (input-text "Password" "password"
+                                            (str "Password contain at least 7 caracters. "
+                                                 " One digit, one uppercase and one lowercase."))
+                                (input-text "Password (Confirm)" "password_confirm"
+                                            "Please confirm your password")
+                                (submin-button "Sign-up")])))

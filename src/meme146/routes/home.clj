@@ -59,17 +59,32 @@
     (redirect "/dictionary")))
 
 (defn user-page [request]
-  (if (authenticated? request) (layout/render-hiccup [:h1 "%username%"])
-      (redirect "/login")))
+  (if (authenticated? request)
+    (layout/render-hiccup [:h1 "%username%"])
+    (redirect "/login")))
 
 (defn login-page [request]
-  (layout/render-hiccup [:h1 "login"]))
+  (layout/render-hiccup [:div.container
+                         [:h1 "login"]
+                         [:p "or " [:a {:href "/sign-up"} "sign-up"]]]))
+
+(defn authenticate [request])
+
+(defn sign-up-page [request]
+  (layout/sign-up))
+
+(defn sign-up [request])
 
 (defroutes home-routes
   (GET "/boot/:msg" [msg] (layout/render-hiccup [:h1 msg]))
-  (GET "/" [] (layout/render-hiccup [:h1 "Welcome %username%"]))
+  (GET "/" [] (layout/render-hiccup [:div.container
+                                     [:h1 "Welcome %username%"]                                     ]
+                                    ))
   (GET "/user" [] user-page)
   (GET "/login" [] login-page)
+  (POST "/login" [] authenticate)
+  (GET "/sign-up" [] sign-up-page)
+  (POST "/sign-up" [] sign-up)
   (GET "/docs" [] (ok (-> "docs/docs.md" io/resource slurp)))
   (GET "/upload" [] (upload-page))
   (POST "/upload" request (add-enrty request))
