@@ -68,8 +68,7 @@
 (defn user-page [request]
   (if (authenticated? request)
     (layout/render-hiccup [:h1 "%username%"])
-    (redirect "/login")
-    ))
+    (redirect "/login")))
 
 (defn login-page [request]
   (layout/render-hiccup [:div.container
@@ -90,7 +89,8 @@
         (assoc :flash (assoc params :errors errors)))
     (do (db/create-user! (merge
                           {:password (encrypt (:password params))}
-                          (select-keys params [username email])))))
+                          (select-keys params [:username :email])))
+        (redirect "/user"))))
 
 (defroutes home-routes
   (GET "/boot/:msg" [msg] (layout/render-hiccup [:h1 msg]))

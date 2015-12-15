@@ -18,6 +18,8 @@
 
 
 
+
+
 (defn render
   "renders the HTML template located relative to resources/templates"
   [template & [params]]
@@ -36,6 +38,8 @@
   (templates/base-template "home bootstrap" welcome-msg))
 
 (defn render-dictionary [dictionary]
+  (println *identity*)
+  (println *app-context*)
   (templates/dictionary-view dictionary))
 
 (defn sign-up [errors]
