@@ -63,7 +63,10 @@
   (first (b/validate
           params
           :username v/required
-          :email v/required)))
+          :email v/required
+          :password v/required
+          :password_confirm [[(partial = (:password params))
+                              :message "passwords confirmation doesen't match."]] )))
 
 (defn user-page [request]
   (if (authenticated? request)
