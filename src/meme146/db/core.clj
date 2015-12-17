@@ -2,6 +2,7 @@
     (:require [monger.core :as mg]
               [monger.collection :as mc]
               [monger.operators :refer :all]
+              [monger.query :as mq]
               [environ.core :refer [env]])
     (:import org.bson.types.ObjectId))
 
@@ -45,8 +46,14 @@
 (defn remove-entry! [id]
   (mc/remove-by-id @db "dictionary" (ObjectId. id)))
 
-(defn get-dictionary []
-  (mc/find-maps @db "dictionary"))
+(defn get-dictionary [from to]
+  (mq/with-collection @db "dictionary"
+    (mq/find {})
+    (mq/skip from)
+    (mq/limit to)))
+
+(defn dictionary-count []
+  (mc/count @db "dictionary"))
 
 (defn update-entry! [id data]
   (mc/update-by-id @db "dictionary" (ObjectId. id) data))

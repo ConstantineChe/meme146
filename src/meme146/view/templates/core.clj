@@ -4,7 +4,8 @@
    [hiccup.page :as hp]
    [hiccup.element :as el]
    [hiccup.form :as form]
-   [hiccup.def :refer :all]))
+   [hiccup.def :refer :all]
+   [meme146.db.core :as db]))
 
 (defn include-bootstrap []
   (list (hp/include-js "https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js")
@@ -59,6 +60,11 @@
                         [:div.main-content
                          [:div.container content]])))
 
+(defn pager [current]
+  (let [total (db/dictionary-count)] [:div#pager.container
+           (for [page (range 1 total)]
+             [:span page])]))
+
 
 (defn dictionary-view [dictionary]
   (base-template "Dictionary"
@@ -71,7 +77,7 @@
                       [:th "translation"]
                       [:th "tag"]]]
                     [:tbody
-                     (for [row dictionary]
+                     (for [row (take 20 dictionary)]
                        [:tr
                         [:td (:base row)]
                         [:td (:translation row)]

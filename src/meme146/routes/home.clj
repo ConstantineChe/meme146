@@ -17,8 +17,11 @@
 (defn upload-page []
   (layout/render "upload.html"))
 
-(defn dictionary-page []
-  (layout/render-dictionary (db/get-dictionary)))
+(defn dictionary-page
+  ([page]
+   (layout/render-dictionary (db/get-dictionary) page))
+  ([]
+   (redirect "/dictionary/page/1")))
 
 (defn validate-dic-entry [params]
   (first
@@ -101,5 +104,6 @@
   (POST "/upload" request (add-enrty request))
   (POST "/upload/batch" request (upload-csv request))
   (GET "/dictionary" [] (dictionary-page))
+  (GET "/dictionary/page/:page" page (dictionary-page page))
   (POST "/dictionary/remove" request (remove-entry request))
   (POST "/dictionary/edit" request (edit-entry request)))
