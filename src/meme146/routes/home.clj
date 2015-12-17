@@ -8,7 +8,8 @@
             [clojure-csv.core :as csv]
             [bouncer.core :as b]
             [bouncer.validators :as v]
-            [buddy.auth :refer [authenticated?]]))
+            [buddy.auth :refer [authenticated?]]
+            [buddy.hashers :refer [encrypt check]]))
 
 (defn home-page []
   (layout/render "home.html"))
@@ -16,8 +17,15 @@
 (defn upload-page []
   (layout/render "upload.html"))
 
-(defn dictionary-page []
-  (layout/render-dictionary (db/get-dictionary)))
+(defn dictionary-page
+  ([page]
+   (if-let [dictionary (seq (db/get-dictionary
+                          (- (* 20 page) 20)
+                          (* 20 page)))]
+     (layout/render-dictionary dictionary page)
+     (redirect "/not-found")))
+  ([]
+   (redirect "/dictionary/page/1")))
 
 (defn validate-dic-entry [params]
   (first
@@ -62,29 +70,37 @@
   (first (b/validate
           params
           :username v/required
-          :email v/required)))
+          :email v/required
+          :password v/required
+          :password_confirm [[(partial = (:password params))
+                              :message "passwords confirmation doesen't match."]] )))
 
 (defn user-page [request]
   (if (authenticated? request)
     (layout/render-hiccup [:h1 "%username%"])
-    (redirect "/login")
-    ))
+    (redirect "/login")))
 
 (defn login-page [request]
   (layout/render-hiccup [:div.container
                          [:h1 "login"]
                          [:p "or " [:a {:href "/sign-up"} "sign-up"]]]))
 
-(defn authenticate [request])
+(defn authenticate [request]
+  (let [user (:user (:params request))
+        password (:password (:params request))]
+   (check password (:password user))))
 
 (defn sign-up-page [request]
-  (layout/sign-up))
+  (layout/sign-up (:errors request)))
 
-(defn sign-up [params]
+(defn sign-up [{:keys [params]}]
   (if-let [errors (validate-registration params)]
     (-> (redirect "/sign-up")
         (assoc :flash (assoc params :errors errors)))
-    (redirect (str "/boot/" (:username params)))))
+    (do (db/create-user! (merge
+                          {:password (encrypt (:password params))}
+                          (select-keys params [:username :email])))
+        (redirect "/user"))))
 
 (defroutes home-routes
   (GET "/boot/:msg" [msg] (layout/render-hiccup [:h1 msg]))
@@ -100,5 +116,6 @@
   (POST "/upload" request (add-enrty request))
   (POST "/upload/batch" request (upload-csv request))
   (GET "/dictionary" [] (dictionary-page))
+  (GET "/dictionary/page/:page" [page] (dictionary-page (Integer. page)))
   (POST "/dictionary/remove" request (remove-entry request))
   (POST "/dictionary/edit" request (edit-entry request)))

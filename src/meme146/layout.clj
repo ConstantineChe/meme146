@@ -18,6 +18,8 @@
 
 
 
+
+
 (defn render
   "renders the HTML template located relative to resources/templates"
   [template & [params]]
@@ -35,11 +37,11 @@
 (defn render-hiccup [welcome-msg]
   (templates/base-template "home bootstrap" welcome-msg))
 
-(defn render-dictionary [dictionary]
-  (templates/dictionary-view dictionary))
+(defn render-dictionary [dictionary page]
+  (templates/dictionary-view dictionary page))
 
-(defn sign-up []
-  (templates/sign-up (anti-forgery-field)))
+(defn sign-up [errors]
+  (templates/sign-up (anti-forgery-field) errors))
 
 
 (defn error-page

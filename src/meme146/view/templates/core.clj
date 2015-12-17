@@ -4,7 +4,8 @@
    [hiccup.page :as hp]
    [hiccup.element :as el]
    [hiccup.form :as form]
-   [hiccup.def :refer :all]))
+   [hiccup.def :refer :all]
+   [meme146.db.core :as db]))
 
 (defn include-bootstrap []
   (list (hp/include-js "https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js")
@@ -59,8 +60,17 @@
                         [:div.main-content
                          [:div.container content]])))
 
+(defn pager [current]
+  (let [total (inc (/ (db/dictionary-count) 20))]
+    [:div#pager.container
+     (for [page (range 1 total)]
+       (if-not (= page current)
+         (el/link-to (str "/dictionary/page/" page)
+                     (str page " "))
+         [:span (str page " ")]))]))
 
-(defn dictionary-view [dictionary]
+
+(defn dictionary-view [dictionary page]
   (base-template "Dictionary"
                  (list [:div.container.about [:h4 "This is a dictionary view page"]]
                   [:div.container  [:h4 "dictionary contents"]
@@ -75,7 +85,8 @@
                        [:tr
                         [:td (:base row)]
                         [:td (:translation row)]
-                        [:td (:tag row)]])]]])))
+                        [:td (:tag row)]])]]
+                   (pager page)])))
 
 
 (defelem input-text [label field comment]
@@ -89,10 +100,11 @@
   [:div.control-group
      [:div.controls [:p] [:button.btn.btn-lg.btn-primary text]]])
 
-(defn sign-up [csrf]
+(defn sign-up [csrf errors]
   (base-template "Sign-up"
                  (form/form-to {:class "form-horizontal"} [:post "/sign-up"]
                                [:fieldset [:div#legend [:legend "Sign-up"]]
+                                (when-not (empty? errors) [:div.error-msg errors])
                                 csrf
                                 (input-text "Username" "username"
                                             (str "Username can contain letters"
