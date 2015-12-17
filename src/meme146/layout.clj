@@ -5,13 +5,20 @@
             [ring.util.http-response :refer [content-type ok]]
             [ring.util.anti-forgery :refer [anti-forgery-field]]
             [ring.middleware.anti-forgery :refer [*anti-forgery-token*]]
-            [environ.core :refer [env]]))
+            [environ.core :refer [env]]
+            [meme146.view.templates.core :as templates]))
 
 (declare ^:dynamic *identity*)
 (declare ^:dynamic *app-context*)
 (parser/set-resource-path!  (clojure.java.io/resource "templates"))
 (parser/add-tag! :csrf-field (fn [_ _] (anti-forgery-field)))
 (filters/add-filter! :markdown (fn [content] [:safe (md-to-html-string content)]))
+
+
+
+
+
+
 
 (defn render
   "renders the HTML template located relative to resources/templates"
@@ -26,6 +33,16 @@
           :csrf-token *anti-forgery-token*
           :servlet-context *app-context*)))
     "text/html; charset=utf-8"))
+
+(defn render-hiccup [welcome-msg]
+  (templates/base-template "home bootstrap" welcome-msg))
+
+(defn render-dictionary [dictionary page]
+  (templates/dictionary-view dictionary page))
+
+(defn sign-up [errors]
+  (templates/sign-up (anti-forgery-field) errors))
+
 
 (defn error-page
   "error-details should be a map containing the following keys:

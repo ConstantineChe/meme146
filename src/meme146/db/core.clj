@@ -2,6 +2,7 @@
     (:require [monger.core :as mg]
               [monger.collection :as mc]
               [monger.operators :refer :all]
+              [monger.query :as mq]
               [environ.core :refer [env]])
     (:import org.bson.types.ObjectId))
 
@@ -32,20 +33,27 @@
   (mc/find-one-as-map @db "users" {:_id id}))
 
 
-(defn add-translation!
-
-  ([base translation tag]
-   (mc/insert @db "dictionary"
-              {:_id (oid)
-               :base base
-               :translation translation
-               :tag tag})))
-
+(defn add-entry! [base translation tag]
+  (mc/insert @db "dictionary"
+             {:_id (oid)
+              :base base
+              :translation translation
+              :tag tag}))
 
 (defn add-dictionary! [collection]
   (mc/insert-batch @db "dictionary" collection))
 
-(defn get-dictionary []
-  (mc/find-maps @db "dictionary"))
+(defn remove-entry! [id]
+  (mc/remove-by-id @db "dictionary" (ObjectId. id)))
 
-(get-dictionary)
+(defn get-dictionary [from to]
+  (mq/with-collection @db "dictionary"
+    (mq/find {})
+    (mq/skip from)
+    (mq/limit to)))
+
+(defn dictionary-count []
+  (mc/count @db "dictionary"))
+
+(defn update-entry! [id data]
+  (mc/update-by-id @db "dictionary" (ObjectId. id) data))
