@@ -66,20 +66,25 @@
   (first (b/validate
           params
           :username v/required
-          :email v/required)))
+          :email v/required
+          :password v/required
+          :password_confirm [[(partial = (:password params))
+                              :message "passwords confirmation doesen't match."]] )))
 
 (defn user-page [request]
   (if (authenticated? request)
     (layout/render-hiccup [:h1 "%username%"])
-    (redirect "/login")
-    ))
+    (redirect "/login")))
 
 (defn login-page [request]
   (layout/render-hiccup [:div.container
                          [:h1 "login"]
                          [:p "or " [:a {:href "/sign-up"} "sign-up"]]]))
 
-(defn authenticate [request])
+(defn authenticate [request]
+  (let [user (:user (:params request))
+        password (:password (:params request))]
+   (check password (:password user))))
 
 (defn sign-up-page [request]
   (layout/sign-up (:errors request)))
@@ -88,7 +93,10 @@
   (if-let [errors (validate-registration params)]
     (-> (redirect "/sign-up")
         (assoc :flash (assoc params :errors errors)))
-    (redirect (str "/boot/" (:username params)))))
+    (do (db/create-user! (merge
+                          {:password (encrypt (:password params))}
+                          (select-keys params [:username :email])))
+        (redirect "/user"))))
 
 (defroutes home-routes
   (GET "/boot/:msg" [msg] (layout/render-hiccup [:h1 msg]))
