@@ -61,12 +61,16 @@
                          [:div.container content]])))
 
 (defn pager [current]
-  (let [total (db/dictionary-count)] [:div#pager.container
-           (for [page (range 1 total)]
-             [:span page])]))
+  (let [total (inc (/ (db/dictionary-count) 20))]
+    [:div#pager.container
+     (for [page (range 1 total)]
+       (if-not (= page current)
+         (el/link-to (str "/dictionary/page/" page)
+                     (str page " "))
+         [:span (str page " ")]))]))
 
 
-(defn dictionary-view [dictionary]
+(defn dictionary-view [dictionary page]
   (base-template "Dictionary"
                  (list [:div.container.about [:h4 "This is a dictionary view page"]]
                   [:div.container  [:h4 "dictionary contents"]
@@ -77,11 +81,12 @@
                       [:th "translation"]
                       [:th "tag"]]]
                     [:tbody
-                     (for [row (take 20 dictionary)]
+                     (for [row dictionary]
                        [:tr
                         [:td (:base row)]
                         [:td (:translation row)]
-                        [:td (:tag row)]])]]])))
+                        [:td (:tag row)]])]]
+                   (pager page)])))
 
 
 (defelem input-text [label field comment]

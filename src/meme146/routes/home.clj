@@ -19,7 +19,11 @@
 
 (defn dictionary-page
   ([page]
-   (layout/render-dictionary (db/get-dictionary) page))
+   (if-let [dictionary (seq (db/get-dictionary
+                          (- (* 20 page) 20)
+                          (* 20 page)))]
+     (layout/render-dictionary dictionary page)
+     (redirect "/not-found")))
   ([]
    (redirect "/dictionary/page/1")))
 
@@ -112,6 +116,6 @@
   (POST "/upload" request (add-enrty request))
   (POST "/upload/batch" request (upload-csv request))
   (GET "/dictionary" [] (dictionary-page))
-  (GET "/dictionary/page/:page" page (dictionary-page page))
+  (GET "/dictionary/page/:page" [page] (dictionary-page (Integer. page)))
   (POST "/dictionary/remove" request (remove-entry request))
   (POST "/dictionary/edit" request (edit-entry request)))

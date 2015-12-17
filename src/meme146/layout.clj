@@ -37,10 +37,8 @@
 (defn render-hiccup [welcome-msg]
   (templates/base-template "home bootstrap" welcome-msg))
 
-(defn render-dictionary [dictionary]
-  (println *identity*)
-  (println *app-context*)
-  (templates/dictionary-view dictionary))
+(defn render-dictionary [dictionary page]
+  (templates/dictionary-view dictionary page))
 
 (defn sign-up [errors]
   (templates/sign-up (anti-forgery-field) errors))
