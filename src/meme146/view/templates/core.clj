@@ -5,7 +5,8 @@
    [hiccup.element :as el]
    [hiccup.form :as form]
    [hiccup.def :refer :all]
-   [meme146.db.core :as db]))
+   [meme146.db.core :as db]
+   [ring.util.anti-forgery :refer [anti-forgery-field]]))
 
 (defn include-bootstrap []
   (list (hp/include-js "https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js")
@@ -90,30 +91,42 @@
                    (pager page)])))
 
 
-(defelem input-text [label field comment]
+(defelem input-text [label field comment password?]
   (list [:label.control-label {:for field} label]
    [:div.control-group
     [:div.controls [:p.help-block comment]
-     (form/text-field {:class "input-xlarge required"}
-                      field)]]))
+     (if-let [type (if password? form/password-field form/text-field)]
+       (type {:class "input-xlarge required"}
+                                 field))]]))
 
-(defelem submin-button [text]
+(defelem submit-button [text]
   [:div.control-group
      [:div.controls [:p] [:button.btn.btn-lg.btn-primary text]]])
 
-(defn sign-up [csrf errors]
+(defn login [errors]
+  (base-template "Login"
+                 (form/form-to {:class "form=horisontal"} [:post "/login"]
+                               [:fieldset [:div#legend [:legend "Login"]]
+                                (when-not (empty? errors) [:div.error-msg errors])
+                                (anti-forgery-field)
+                                (input-text "Username" "username" "" false)
+                                (input-text "Password" "password" "" true)
+                                (submit-button "Login") [:span " or " (el/link-to "/sign-up" "sign-up")]])))
+
+(defn sign-up [errors]
   (base-template "Sign-up"
                  (form/form-to {:class "form-horizontal"} [:post "/sign-up"]
                                [:fieldset [:div#legend [:legend "Sign-up"]]
                                 (when-not (empty? errors) [:div.error-msg errors])
-                                csrf
+                                (anti-forgery-field)
                                 (input-text "Username" "username"
                                             (str "Username can contain letters"
-                                                 " and numbers without spaces"))
-                                (input-text "Email" "email" "")
+                                                 " and numbers without spaces") false)
+                                (input-text "Email" "email" "" false)
                                 (input-text "Password" "password"
                                             (str "Password contain at least 7 caracters. "
-                                                 " One digit, one uppercase and one lowercase."))
+                                                 " One digit, one uppercase and one lowercase.")
+                                            true)
                                 (input-text "Password (Confirm)" "password_confirm"
-                                            "Please confirm your password")
-                                (submin-button "Sign-up")])))
+                                            "Please confirm your password" true)
+                                (submit-button "Sign-up")])))

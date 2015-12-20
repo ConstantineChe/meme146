@@ -8,6 +8,7 @@
             [clojure-csv.core :as csv]
             [bouncer.core :as b]
             [bouncer.validators :as v]
+            [meme146.view.templates.core :as templates]
             [buddy.auth :refer [authenticated?]]
             [buddy.hashers :refer [encrypt check]]))
 
@@ -81,9 +82,7 @@
     (redirect "/login")))
 
 (defn login-page [request]
-  (layout/render-hiccup [:div.container
-                         [:h1 "login"]
-                         [:p "or " [:a {:href "/sign-up"} "sign-up"]]]))
+  (templates/login []))
 
 (defn authenticate [request]
   (let [user (:user (:params request))

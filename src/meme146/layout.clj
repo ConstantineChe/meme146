@@ -41,7 +41,7 @@
   (templates/dictionary-view dictionary page))
 
 (defn sign-up [errors]
-  (templates/sign-up (anti-forgery-field) errors))
+  (templates/sign-up errors))
 
 
 (defn error-page
