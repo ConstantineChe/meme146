@@ -21,7 +21,7 @@
   ([page]
    (if-let [dictionary (seq (db/get-dictionary
                           (- (* 20 page) 20)
-                          (* 20 page)))]
+                          20))]
      (layout/render-dictionary dictionary page)
      (redirect "/not-found")))
   ([]

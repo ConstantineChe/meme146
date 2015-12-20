@@ -9,7 +9,11 @@
              :padding-right 0
              :left 0
              :right 0}]
-   [:.main-content {:padding-top (px 125)}]]
+   [:.main-content {:padding-top (px 125)}]
+   [:.main-header
+    {
+     :background "white"
+     }]]
   )
 
 (defstyles main-styles

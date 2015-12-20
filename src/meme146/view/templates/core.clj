@@ -55,19 +55,20 @@
   (blank-page title (list (header (map #(apply el/link-to %)
                                        [["/" "Home"]
                                         ["/dictionary" "Dictionary"]
-                                        ["user" "Account"]
+                                        ["/user" "Account"]
                                           ]))
                         [:div.main-content
                          [:div.container content]])))
 
 (defn pager [current]
   (let [total (inc (/ (db/dictionary-count) 20))]
-    [:div#pager.container
+    [:ul.pagination
+     [:li (el/link-to (str "/dictionary/page/" (dec current)) "«")]
      (for [page (range 1 total)]
        (if-not (= page current)
-         (el/link-to (str "/dictionary/page/" page)
-                     (str page " "))
-         [:span (str page " ")]))]))
+         [:li (el/link-to (str "/dictionary/page/" page)
+                      (str page " "))]))
+     [:li (el/link-to (str "/dictionary/page/" (inc current)) "»")]]))
 
 
 (defn dictionary-view [dictionary page]

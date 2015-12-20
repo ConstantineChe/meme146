@@ -9,3 +9,7 @@ header {
 .main-content {
   padding-top: 125px;
 }
+
+.main-header {
+  background: white;
+}
