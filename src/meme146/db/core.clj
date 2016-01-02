@@ -3,7 +3,8 @@
               [monger.collection :as mc]
               [monger.operators :refer :all]
               [monger.query :as mq]
-              [environ.core :refer [env]])
+              [environ.core :refer [env]]
+              [buddy.hashers :refer [encrypt]])
     (:import org.bson.types.ObjectId))
 
 
@@ -29,8 +30,8 @@
                     :last_name last-name
                     :email email}}))
 
-(defn get-user [id]
-  (mc/find-one-as-map @db "users" {:_id id}))
+(defn get-user [username]
+  (mc/find-one-as-map @db "users" {:username username}))
 
 
 (defn add-entry! [base translation tag]

@@ -35,7 +35,8 @@
                  [org.immutant/web "2.1.0" :exclusions [ch.qos.logback/logback-classic]]
                  [clojure-csv/clojure-csv "2.0.1"]
                  [lib-noir "0.9.9"]
-                 [garden "1.3.0"]]
+                 [garden "1.3.0"]
+                 [spyscope "0.1.5"]]
 
   :min-lein-version "2.0.0"
   :uberjar-name "meme146.jar"
@@ -83,7 +84,8 @@
                                  [ring/ring-devel "1.4.0"]
                                  [pjstadig/humane-test-output "0.7.0"]
                                  [lein-figwheel "0.5.0-SNAPSHOT"]
-                                 [com.cemerick/piggieback "0.1.5"]]
+                                 [com.cemerick/piggieback "0.1.5"]
+                                 [im.chit/vinyasa "0.1.2"]]
                   :plugins [[lein-figwheel "0.5.0-SNAPSHOT"]]
                    :cljsbuild
                    {:builds
@@ -100,7 +102,9 @@
 
                   :repl-options {:init-ns meme146.core}
                   :injections [(require 'pjstadig.humane-test-output)
-                               (pjstadig.humane-test-output/activate!)]
+                               (pjstadig.humane-test-output/activate!)
+                               (require 'spyscope.core)
+                               ]
                   ;;when :nrepl-port is set the application starts the nREPL server on load
                   :env {:dev        true
                         :port       3000

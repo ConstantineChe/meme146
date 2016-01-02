@@ -76,6 +76,7 @@
                               :message "passwords confirmation doesen't match."]] )))
 
 (defn user-page [request]
+  (println (:session request))
   (if (authenticated? request)
     (layout/render-hiccup [:h1 "%username%"])
     (redirect "/login")))
@@ -86,21 +87,29 @@
                          [:p "or " [:a {:href "/sign-up"} "sign-up"]]]))
 
 (defn authenticate [request]
-  (let [user (:user (:params request))
-        password (:password (:params request))]
-   (check password (:password user))))
+  (let [user (db/get-user (:username (:params request)))
+        password (:password (:params request))
+        session (:session request)]
+    (println user)
+    (if (check password (:password user))
+      (let [updated-session (assoc session :identity (keyword (:email user)))]
+        (-> (redirect "/user")
+            (assoc :session updated-session))))))
 
 (defn sign-up-page [request]
   (layout/sign-up (:errors request)))
 
-(defn sign-up [{:keys [params]}]
-  (if-let [errors (validate-registration params)]
-    (-> (redirect "/sign-up")
-        (assoc :flash (assoc params :errors errors)))
-    (do (db/create-user! (merge
-                          {:password (encrypt (:password params))}
-                          (select-keys params [:username :email])))
-        (redirect "/user"))))
+
+(defn sign-up [request]
+  (let [params (:params request)]
+    (if-let [errors (validate-registration params)]
+            (-> (redirect "/sign-up")
+                (assoc :flash (assoc params :errors errors)))
+            (do (db/create-user! (merge
+                                  {:password (encrypt (:password params))}
+                                  (select-keys params [:username :email])))
+                (-> (redirect "/user")
+                    (assoc-in [:session :identity] (:email params)))))))
 
 (defroutes home-routes
   (GET "/boot/:msg" [msg] (layout/render-hiccup [:h1 msg]))

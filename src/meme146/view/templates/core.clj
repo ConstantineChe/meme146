@@ -93,8 +93,9 @@
   (list [:label.control-label {:for field} label]
    [:div.control-group
     [:div.controls [:p.help-block comment]
-     (form/text-field {:class "input-xlarge required"}
-                      field)]]))
+     (let [type (if password? form/password-field form/text-field)]
+       (type {:class "input-xlarge required"}
+                                 field))]]))
 
 (defelem submin-button [text]
   [:div.control-group
@@ -108,11 +109,11 @@
                                 csrf
                                 (input-text "Username" "username"
                                             (str "Username can contain letters"
-                                                 " and numbers without spaces"))
+                                                 " and numbers without spaces") false)
                                 (input-text "Email" "email" "")
                                 (input-text "Password" "password"
                                             (str "Password contain at least 7 caracters. "
-                                                 " One digit, one uppercase and one lowercase."))
+                                                 " One digit, one uppercase and one lowercase.") true)
                                 (input-text "Password (Confirm)" "password_confirm"
-                                            "Please confirm your password")
+                                            "Please confirm your password" true)
                                 (submin-button "Sign-up")])))

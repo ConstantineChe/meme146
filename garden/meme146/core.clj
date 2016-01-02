@@ -1,5 +1,5 @@
 (ns meme146.core
-  (:require [garden.def :refer [defstylesheet defstyles]]
+  (:require [garden.def :refer [ defstyles]]
             [garden.units :refer [px]]))
 
 (def styles
